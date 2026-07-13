@@ -24,4 +24,4 @@ COPY --chown=node:node . .
 EXPOSE 5000
 
 # Run the app directly using node instead of npm for better signal handling (graceful shutdowns)
-CMD ["node", "index.js"]
+CMD ["node", "src/server.js"]
