@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 // Initialize Prisma Client
 // We instantiate it once and export it to be used across the entire application
 const prisma = new PrismaClient({
-    // Optional: Log queries to the console during development
+    url: process.env.DATABASE_URL,
     log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
 });
 

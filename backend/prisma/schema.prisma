@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +8,30 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+// ------------------------------------------------------
+// ENUMS
+// ------------------------------------------------------
+
+// Defines the types of users in our system based on the PRD
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+// ------------------------------------------------------
+// MODELS
+// ------------------------------------------------------
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Stores the hashed password
+  name      String
+  role      Role     @default(STUDENT)
+  
+  // Timestamps to track when the user joined or updated their profile
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
