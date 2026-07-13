@@ -1,7 +1,11 @@
 const app = require('./app');
+const { connectDB } = require('./config/db'); // Import DB connection
 
 // Determine the port
 const PORT = process.env.PORT || 5000;
+
+// Connect to PostgreSQL database
+connectDB();
 
 // Handle Uncaught Exceptions (e.g. synchronous code errors)
 process.on('uncaughtException', (err) => {
