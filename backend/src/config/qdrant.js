@@ -1,0 +1,1 @@
+//Qdrant Vector DB configuaration and connecting to it
