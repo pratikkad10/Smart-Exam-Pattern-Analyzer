@@ -54,12 +54,13 @@ docker compose stop
 
 ---
 
-## 📂 Project Structure
+## 📂 Root Files Explained
 
 - `Dockerfile`: The instructions for building the production-ready Node.js image.
 - `docker-compose.yml`: Orchestrates the Node.js API, PostgreSQL, and Qdrant containers.
 - `.env.example`: Template for required environment variables.
-- `index.js`: The entry point for the Express server.
+- `src/server.js`: The main entry point that starts the server and handles system errors.
+- `src/app.js`: Configures the core Express application, middlewares, and routes.
 - `package.json`: Project dependencies and scripts.
 
 ---
@@ -67,6 +68,49 @@ docker compose stop
 ## 🔒 Security Notes
 - **Do not commit `.env` to version control.** It is already ignored in `.gitignore`.
 - The databases (Postgres & Qdrant) are strictly confined to the internal Docker network for security. They do not expose their ports to the host machine. If you need local host access (e.g., using pgAdmin), you will need to map ports in `docker-compose.yml`.
+
+---
+
+## 📁 The "Brains" Inside `src/`
+Think of the `src` folder as the brain and organs of your AI assistant.
+
+### 🧠 `src/config/` (The Control Center)
+This folder sets up all the connections and tools needed for your AI.
+- **`db.js`**: The bridge to the PostgreSQL database (stores user info and paper details).
+- **`qdrant.js`**: The bridge to the Qdrant vector database (stores the "memory" or understanding of your PDFs).
+- **`llm.js`**: Configures the connection to Google Gemini, the AI model that powers the answers.
+
+### 🎨 `src/controllers/` (The Decision Makers)
+These files act like managers who take requests and tell the services what to do.
+- **`auth.controller.js`**: Handles "Would you like to sign up or log in?"
+- **`paper.controller.js`**: Handles "Please upload your PDF here."
+- **`chat.controller.js`**: Handles "I have a question about my notes."
+- **`quiz.controller.js`**: Handles "Create a quiz based on this."
+- **`studyPlan.controller.js`**: Handles "Make me a study schedule."
+
+### 🧪 `src/services/` (The Muscle & Brainpower)
+This is the most important folder! It contains the actual logic and AI magic.
+- **`pdf/`**: Handles the boring but necessary tasks like reading the PDF (`extractText.service.js`) and breaking it into small readable chunks (`chunkText.service.js`).
+- **`llm/`**: This is the **Gemini AI magic**. It calls the AI to actually understand the text, generate questions (`extractQuestions.service.js`), and create study plans (`studyPlan.service.js`).
+- **`embeddings/`**: This special service converts your text into secret codes (vectors) so the AI can search through them super fast (`embedding.service.js`).
+- **`analytics/`**: Calculates statistics like "What topics are repeated most often?" (`frequency.service.js`).
+
+### 🧩 `src/models/` (The Blueprints)
+These files define the structure for your database tables (like empty forms to fill in).
+- **`user.model.js`**: Defines what a "User" looks like (ID, name, email, password hash).
+- **`paper.model.js`**: Defines what a "PDF Document" looks like (ID, title, the file itself).
+
+### 🚦 `src/routes/` (The Road Signs)
+These files connect the outside world to your controllers. They tell the API: "If someone types `/api/chat`, go to the `chat.controller`."
+
+### 🛠 `src/utils/` (The Helper Tools)
+- **`apiResponse.js`**: Sends consistent, clean messages back to the frontend.
+- **`logger.js`**: A smart system to print helpful messages in the terminal (and hide boring ones).
+
+### ✅ `src/validators/` (The Gatekeepers)
+Before a request enters the controller, these files check if the data is correct. (e.g., "Is this actually an email address?").
+
+---
 
 
 ## 📁 Backend Folder Structure
