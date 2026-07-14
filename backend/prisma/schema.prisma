@@ -20,18 +20,60 @@ enum Role {
   ADMIN
 }
 
+// OAuth implementation deferred to Phase 2
+// enum Provider {
+//   LOCAL
+//   GOOGLE
+//   FACEBOOK
+// }
+
+// Defines the type of verification token
+enum TokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
 // ------------------------------------------------------
 // MODELS
 // ------------------------------------------------------
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String   // Stores the hashed password
-  name      String
-  role      Role     @default(STUDENT)
+  id              String   @id @default(uuid())
+  email           String   @unique
+  passwordHash    String?  // Nullable for OAuth users
   
-  // Timestamps to track when the user joined or updated their profile
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  firstName       String
+  lastName        String?
+  phone           String?
+  
+  role            Role     @default(STUDENT)
+  isEmailVerified Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  
+  // OAuth fields (for future V2 implementation)
+  // provider        String   @default("LOCAL")
+  // googleId        String?  @unique
+  // facebookId      String?  @unique
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  tokens          VerificationToken[]
+}
+
+model VerificationToken {
+  id        String    @id @default(uuid())
+  token     String
+  type      TokenType
+  userId    String
+  expiresAt DateTime
+  
+  // Relation to User
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime  @default(now())
+
+  @@index([token, type])
 }

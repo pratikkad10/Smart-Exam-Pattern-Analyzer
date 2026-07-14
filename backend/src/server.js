@@ -1,5 +1,6 @@
-const app = require('./app');
-const { connectDB } = require('./config/db'); // Import DB connection
+import 'dotenv/config'; // Must load before any module that reads process.env
+import app from './app.js';
+import { connectDB } from './config/db.js'; // Import DB connection
 
 // Determine the port
 const PORT = process.env.PORT || 5000;
