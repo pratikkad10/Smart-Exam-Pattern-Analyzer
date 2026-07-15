@@ -1,7 +1,8 @@
-const express = require('express');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const globalErrorHandler = require('./middlewares/error.middleware');
+import express from 'express';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import rateLimit from 'express-rate-limit';
+import globalErrorHandler from './middlewares/error.middleware.js';
 
 const app = express();
 
@@ -22,6 +23,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // --- Built-in Middlewares ---
+app.use(cookieParser()); // Parse cookies from incoming requests
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
@@ -37,9 +39,9 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'success', message: 'Server is healthy' });
 });
 
-// --- API Routes (To be imported and added here) ---
-// const authRoutes = require('./routes/auth.routes');
-// app.use('/api/v1/auth', authRoutes);
+// --- API Routes ---
+import authRoutes from './routes/auth.routes.js';
+app.use('/api/v1/auth', authRoutes);
 
 // --- 404 Route Handler ---
 app.use((req, res, next) => {
@@ -49,4 +51,4 @@ app.use((req, res, next) => {
 // --- Global Error Handler ---
 app.use(globalErrorHandler);
 
-module.exports = app;
+export default app;

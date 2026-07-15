@@ -1,5 +1,6 @@
-const app = require('./app');
-const { connectDB } = require('./config/db'); // Import DB connection
+import 'dotenv/config'; // Must load before any module that reads process.env
+import app from './app.js';
+import { connectDB } from './config/db.js'; // Import DB connection
 
 // Determine the port
 const PORT = process.env.PORT || 5000;
@@ -9,7 +10,7 @@ connectDB();
 
 // Handle Uncaught Exceptions (e.g. synchronous code errors)
 process.on('uncaughtException', (err) => {
-    console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+    console.error('UNCAUGHT EXCEPTION! Shutting down...');
     console.error(err.name, err.message, err.stack);
     process.exit(1);
 });
@@ -22,7 +23,7 @@ const server = app.listen(PORT, () => {
 
 // Handle Unhandled Promise Rejections (e.g. async errors, database connection failures)
 process.on('unhandledRejection', (err) => {
-    console.error('UNHANDLED REJECTION! 💥 Shutting down...');
+    console.error('UNHANDLED REJECTION! Shutting down...');
     console.error(err.name, err.message);
     server.close(() => {
         process.exit(1);
@@ -33,6 +34,6 @@ process.on('unhandledRejection', (err) => {
 process.on('SIGTERM', () => {
     console.log('👋 SIGTERM RECEIVED. Shutting down gracefully...');
     server.close(() => {
-        console.log('💥 Process terminated!');
+        console.log('Process terminated!');
     });
 });
