@@ -109,6 +109,8 @@ export const updateEmailController = async (req, res) => {
 
         // Strictly using env variable as requested
         const emailLink = `${process.env.CLIENT_URL}/verify-email-token?token=${verificationToken}`;
+        
+        console.log("Verification email link: ", emailLink, "Verification token: ", verificationToken);
 
         await sendVerificationEmail(user.firstName, email, emailLink);
 
