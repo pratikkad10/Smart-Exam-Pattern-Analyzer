@@ -174,7 +174,7 @@ export const updateProfileController = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        const { updateProfileSchema } = await import("../../validation/user.validation");
+        const { updateProfileSchema } = await import("../../validation/user.validation.js");
         const validation = updateProfileSchema.safeParse(req.body);
 
         if (!validation.success) {
