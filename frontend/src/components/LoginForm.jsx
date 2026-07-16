@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../context/ToastContext';
 
 export default function LoginForm() {
     const navigate = useNavigate();
     const { login } = useAuth();
+    const toast = useToast();
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState('');
@@ -19,6 +21,7 @@ export default function LoginForm() {
 
         try {
             await login({ email, password });
+            toast.success('Welcome back!', 'You have successfully logged in.');
             navigate('/dashboard'); // Success!
         } catch (err) {
             console.error("Login failed:", err);

@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../context/ToastContext';
 
 export default function SignupForm() {
     const navigate = useNavigate();
     const { register } = useAuth();
+    const toast = useToast();
 
     // Form State
     const [firstName, setFirstName] = useState('');
@@ -26,6 +28,7 @@ export default function SignupForm() {
         try {
             // Call the API service we created
             await register({ firstName, lastName, email, password });
+            toast.success('Account Created', 'Please check your inbox to verify your email address.');
 
             // If successful, navigate to the dashboard
             navigate('/dashboard');

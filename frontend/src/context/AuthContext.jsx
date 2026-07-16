@@ -1,9 +1,11 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
+import { useToast } from './ToastContext';
 
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+    const toast = useToast();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -45,6 +47,7 @@ export function AuthProvider({ children }) {
     const logout = () => {
         authService.logout();
         setUser(null);
+        toast.info('Logged Out', 'You have been successfully logged out.');
     };
 
     return (

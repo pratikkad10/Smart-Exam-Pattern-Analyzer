@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Upload, FileText, CheckCircle2, Menu, X, Settings, LogOut } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Upload, FileText, CheckCircle2, Menu, X, Settings, LogOut, Share, Download } from 'lucide-react';
+import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useDocuments } from '../hooks/useDocuments';
 
@@ -121,9 +121,9 @@ export default function AppLayout({ children }) {
                             </div>
                         </div>
                     )}
-                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200 transition-colors">
+                    <Link to="/settings" className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200 transition-colors">
                         <Settings className="w-4 h-4" /> Settings
-                    </button>
+                    </Link>
                     <button onClick={logout} className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md text-zinc-400 hover:bg-zinc-900 hover:text-red-400 transition-colors mt-1 cursor-pointer">
                         <LogOut className="w-4 h-4" /> Log out
                     </button>
@@ -134,13 +134,30 @@ export default function AppLayout({ children }) {
             <main className="flex-1 flex flex-col h-screen bg-zinc-950/50 relative overflow-hidden w-full">
 
                 {/* Dynamic Header */}
-                <header className="h-14 border-b border-zinc-800 flex items-center px-6 justify-between shrink-0 bg-zinc-950/80 backdrop-blur-md z-10">
-                    <h2 className="text-sm font-medium text-zinc-400 truncate pr-12 md:pr-4">
-                        {activeDocument ? activeDocument.filename : "Select a document from Library"}
-                    </h2>
-                    <button className="text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-100 px-3 py-1.5 rounded transition-colors whitespace-nowrap hidden sm:block shadow-sm">
-                        Export Plan
-                    </button>
+                <header className="h-14 border-b border-zinc-800 bg-zinc-950 flex items-center justify-between px-6 shrink-0 w-full">
+                    {/* View Tabs */}
+                    <nav className="flex items-center gap-6 h-full pt-1">
+                        <NavLink to="/chat" className={({isActive}) => `text-sm font-medium h-full px-1 flex items-center transition-colors border-b-2 ${isActive ? 'text-zinc-100 border-zinc-50' : 'text-zinc-500 hover:text-zinc-300 border-transparent'}`}>
+                            Chat Interface
+                        </NavLink>
+                        <NavLink to="/dashboard" className={({isActive}) => `text-sm font-medium h-full px-1 flex items-center transition-colors border-b-2 ${isActive ? 'text-zinc-100 border-zinc-50' : 'text-zinc-500 hover:text-zinc-300 border-transparent'}`}>
+                            Analytics
+                        </NavLink>
+                        <NavLink to="/quiz" className={({isActive}) => `text-sm font-medium h-full px-1 flex items-center transition-colors border-b-2 ${isActive ? 'text-zinc-100 border-zinc-50' : 'text-zinc-500 hover:text-zinc-300 border-transparent'}`}>
+                            Practice Quiz
+                        </NavLink>
+                    </nav>
+
+                    {/* Actions Group */}
+                    <div className="flex items-center gap-2">
+                        <button className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-md transition-colors">
+                            <Share className="w-4 h-4" />
+                        </button>
+                        <button className="flex items-center gap-2 text-xs font-medium bg-zinc-50 text-zinc-950 hover:bg-zinc-200 px-3 py-1.5 rounded-md transition-colors shadow-sm">
+                            <Download className="w-3.5 h-3.5" />
+                            Export
+                        </button>
+                    </div>
                 </header>
 
                 {/* Dynamic Content Area (Chat, Analytics, or Quiz will render here) */}
