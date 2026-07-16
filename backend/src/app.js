@@ -1,5 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import globalErrorHandler from './middlewares/error.middleware.js';
@@ -9,6 +10,14 @@ const app = express();
 // --- Security Middlewares ---
 // Set security HTTP headers (MUST be at the top to protect all routes)
 app.use(helmet());
+
+// Enable CORS with support for credentials
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Limit requests from same API to prevent brute-force and DDoS attacks
 const limiter = rateLimit({
