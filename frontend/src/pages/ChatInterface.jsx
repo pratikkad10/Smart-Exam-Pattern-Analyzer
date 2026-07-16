@@ -58,11 +58,28 @@ export default function ChatInterface() {
     };
 
     return (
-        <div className="flex flex-col h-full bg-zinc-950 relative">
+        <div className="flex flex-col h-full bg-zinc-900 relative">
 
             {/* Chat History Area */}
-            <div className="flex-1 overflow-y-auto scroll-smooth pb-32 pt-6 px-4 md:px-0">
+            <div className="flex-1 overflow-y-auto scroll-smooth pb-32 pt-10 px-4 md:px-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-700 hover:[&::-webkit-scrollbar-thumb]:bg-zinc-600 [&::-webkit-scrollbar-thumb]:rounded-full">
                 <div className="max-w-3xl mx-auto space-y-6">
+
+                    {/* Conversation Knowledge Base Header */}
+                    <div className="mb-10 border-b border-zinc-800 pb-8">
+                        <h1 className="text-3xl font-bold text-zinc-100 mb-6">Operating Systems '24</h1>
+                        <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-700/50 rounded-lg px-3 py-2 shadow-sm">
+                                <FileText className="w-4 h-4 text-blue-400" />
+                                <span className="text-sm font-medium text-zinc-200">os_final_2024.pdf</span>
+                                <span className="text-xs text-zinc-500 ml-1">2.4 MB</span>
+                            </div>
+                            {/* Upload more PDFs button */}
+                            <button className="flex items-center gap-2 bg-zinc-900 border border-dashed border-zinc-600 rounded-lg px-3 py-2 shadow-sm hover:bg-zinc-800 transition-colors text-zinc-400 hover:text-zinc-300">
+                                <span className="text-sm font-medium">+ Attach another PDF</span>
+                            </button>
+                        </div>
+                    </div>
+
                     {messages.map((msg) => (
                         <div key={msg.id} className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
 
@@ -100,11 +117,11 @@ export default function ChatInterface() {
             </div>
 
             {/* Floating Input Bar */}
-            <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-zinc-950 via-zinc-950/90 to-transparent pt-10 pb-6 px-4 md:px-0 pointer-events-none">
+            <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-zinc-900 via-zinc-900/90 to-transparent pt-10 pb-6 px-4 md:px-0 pointer-events-none">
                 <div className="max-w-3xl mx-auto pointer-events-auto">
                     <form
                         onSubmit={handleSend}
-                        className="relative flex items-end bg-zinc-900 border border-zinc-700/60 rounded-2xl shadow-xl overflow-hidden focus-within:ring-1 focus-within:ring-zinc-500 focus-within:border-zinc-500 transition-all"
+                        className="relative flex items-end bg-zinc-800 border border-zinc-700/60 rounded-2xl shadow-xl overflow-hidden focus-within:ring-1 focus-within:ring-zinc-500 focus-within:border-zinc-500 transition-all"
                     >
                         <textarea
                             value={inputValue}
