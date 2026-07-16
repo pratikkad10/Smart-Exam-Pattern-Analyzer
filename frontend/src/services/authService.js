@@ -34,5 +34,48 @@ export const authService = {
             localStorage.removeItem('isLoggedIn');
             window.location.href = '/login';
         }
+    },
+
+    // Email Verification
+    verifyEmail: async (token) => {
+        const response = await api.get(`/auth/verify-email?token=${token}`);
+        return response.data;
+    },
+
+    resendVerificationEmail: async (email) => {
+        const response = await api.post('/auth/resend-verification-email', { email });
+        return response.data;
+    },
+
+    // Password Recovery
+    forgotPassword: async (email) => {
+        const response = await api.post('/auth/forgot-password', { email });
+        return response.data;
+    },
+
+    resetPassword: async (token, newPassword) => {
+        const response = await api.post('/auth/reset-password', { token, newPassword });
+        return response.data;
+    },
+
+    // User Settings Updates (Protected)
+    updatePassword: async (passwordData) => {
+        const response = await api.put('/auth/update-password', passwordData);
+        return response.data;
+    },
+
+    updateEmail: async (emailData) => {
+        const response = await api.put('/auth/update-email', emailData);
+        return response.data;
+    },
+
+    updateProfile: async (profileData) => {
+        const response = await api.put('/auth/profile', profileData);
+        return response.data;
+    },
+
+    deleteAccount: async () => {
+        const response = await api.delete('/auth/account');
+        return response.data;
     }
 };

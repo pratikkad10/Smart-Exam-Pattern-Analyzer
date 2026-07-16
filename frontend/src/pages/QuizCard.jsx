@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { CheckCircle2, XCircle, ChevronRight, HelpCircle, ArrowRight } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 
 export default function QuizCard() {
-    // Dummy data representing AI-extracted questions
+    const toast = useToast();
+    
+    // Static data representing AI-extracted questions
     const quizData = [
         {
             id: 1,
@@ -17,12 +20,51 @@ export default function QuizCard() {
             correctIndex: 1,
             explanation: "The Banker's Algorithm simulates resource allocation for all processes to check for a safe state, preventing deadlocks before they occur."
         },
-        // Add more questions here for a full quiz flow
+        {
+            id: 2,
+            topic: "Virtual Memory",
+            question: "What is the phenomenon called when a system spends most of its time swapping pages rather than executing instructions?",
+            options: [
+                "Paging",
+                "Segmentation",
+                "Thrashing",
+                "Fragmentation"
+            ],
+            correctIndex: 2,
+            explanation: "Thrashing occurs when high page fault rates lead to constant swapping of pages in and out of memory, severely degrading system performance."
+        },
+        {
+            id: 3,
+            topic: "Process Synchronization",
+            question: "Which synchronization tool is an integer variable that, apart from initialization, is accessed only through two standard atomic operations: wait() and signal()?",
+            options: [
+                "Mutex Lock",
+                "Semaphore",
+                "Monitor",
+                "Condition Variable"
+            ],
+            correctIndex: 1,
+            explanation: "A semaphore is an integer variable used to control access to a common resource by multiple processes in a concurrent system."
+        },
+        {
+            id: 4,
+            topic: "Memory Management",
+            question: "Which page replacement algorithm suffers from Belady's Anomaly?",
+            options: [
+                "Least Recently Used (LRU)",
+                "Optimal Page Replacement",
+                "First-In, First-Out (FIFO)",
+                "Not Recently Used (NRU)"
+            ],
+            correctIndex: 2,
+            explanation: "Belady's Anomaly is a phenomenon where increasing the number of page frames actually increases the number of page faults, which occurs in FIFO."
+        }
     ];
 
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [selectedOption, setSelectedOption] = useState < number | null > (null);
+    const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [score, setScore] = useState(0);
 
     const question = quizData[currentQuestion];
 
@@ -34,13 +76,25 @@ export default function QuizCard() {
     const handleSubmit = () => {
         if (selectedOption !== null) {
             setIsSubmitted(true);
+            if (selectedOption === question.correctIndex) {
+                setScore(prev => prev + 1);
+            }
         }
     };
 
     const handleNext = () => {
-        // Reset state for the next question (in a real app, you'd increment currentQuestion)
-        setSelectedOption(null);
-        setIsSubmitted(false);
+        if (currentQuestion < quizData.length - 1) {
+            setCurrentQuestion(prev => prev + 1);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+        } else {
+            toast.success('Quiz Completed!', `You scored ${score + (selectedOption === question.correctIndex ? 1 : 0)} out of ${quizData.length}.`);
+            // Reset Quiz
+            setCurrentQuestion(0);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setScore(0);
+        }
     };
 
     // Helper function to determine the CSS classes for each option based on its state
@@ -73,7 +127,10 @@ export default function QuizCard() {
 
                 {/* Progress Bar (Visual flair) */}
                 <div className="absolute top-0 left-0 h-1 bg-zinc-800 w-full">
-                    <div className="h-full bg-zinc-400 transition-all duration-500 w-1/3"></div>
+                    <div 
+                        className="h-full bg-zinc-400 transition-all duration-500" 
+                        style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
+                    ></div>
                 </div>
 
                 {/* Header: Meta Info */}
@@ -83,7 +140,7 @@ export default function QuizCard() {
                         {question.topic}
                     </span>
                     <span className="text-sm font-medium text-zinc-500">
-                        Question {currentQuestion + 1} of 10
+                        Question {currentQuestion + 1} of {quizData.length}
                     </span>
                 </div>
 

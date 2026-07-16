@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, FileText, BrainCircuit, MessageSquare } from 'lucide-react';
+import { ArrowRight, FileText, BrainCircuit, MessageSquare, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function HomePage() {
@@ -25,29 +25,46 @@ export default function HomePage() {
             <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20">
                 <div className="max-w-3xl space-y-8">
                     <h1 className="text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-                        Turn your past exam papers into <span className="text-zinc-400">interactive study sessions.</span>
+                        Smart Exam Pattern <span className="text-zinc-400">Analyzer</span>
                     </h1>
                     <p className="text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-                        Upload your PDFs. Our AI extracts questions, predicts high-yield topics, and generates personalized quizzes to help you ace your next exam.
+                        Stop wasting hours manually reading old university exam papers. Upload your PDFs and let our AI extract questions, find high-yield topics, and allow you to chat directly with your exam data.
                     </p>
                     <div className="flex items-center justify-center gap-4 pt-4">
                         <Link to="/signup" className="flex items-center gap-2 text-sm font-medium bg-zinc-50 text-zinc-950 px-6 py-3 rounded-lg hover:bg-zinc-200 transition-colors">
-                            Start Studying Free <ArrowRight className="w-4 h-4" />
+                            Start Analyzing Free <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
                 </div>
 
                 {/* Feature Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full mt-24">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full mt-24">
                     {[
-                        { icon: FileText, title: "Smart Extraction", desc: "Instantly pull questions and answers from dense PDF files." },
-                        { icon: BrainCircuit, title: "Topic Prediction", desc: "Identify recurring patterns and focus on high-probability topics." },
-                        { icon: MessageSquare, title: "RAG Chat Tutors", desc: "Chat directly with your syllabus to clarify complex concepts." }
+                        { 
+                            icon: FileText, 
+                            title: "PDF Extraction", 
+                            desc: "Upload exam PDFs. The AI automatically parses dense text via OCR to extract questions, marks, and units." 
+                        },
+                        { 
+                            icon: MessageSquare, 
+                            title: "AI RAG Chatbot", 
+                            desc: "Chat directly with your past papers. Ask questions like 'List all 8-mark questions from Unit 2' for instant answers." 
+                        },
+                        { 
+                            icon: BrainCircuit, 
+                            title: "Analytics & Planning", 
+                            desc: "View visual graphs of frequently asked topics to generate a customized, data-driven study schedule." 
+                        },
+                        { 
+                            icon: Target, 
+                            title: "AI Quiz Generator", 
+                            desc: "Test your knowledge instantly. The AI creates short multiple-choice quizzes based directly on extracted exam questions." 
+                        }
                     ].map((feature, i) => (
-                        <div key={i} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 text-left backdrop-blur-md">
+                        <div key={i} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 text-left backdrop-blur-md hover:bg-zinc-900/80 transition-colors">
                             <feature.icon className="w-6 h-6 text-zinc-300 mb-4" />
                             <h3 className="text-lg font-semibold text-zinc-100 mb-2">{feature.title}</h3>
-                            <p className="text-sm text-zinc-400">{feature.desc}</p>
+                            <p className="text-sm text-zinc-400 leading-relaxed">{feature.desc}</p>
                         </div>
                     ))}
                 </div>
