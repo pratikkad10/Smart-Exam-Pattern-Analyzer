@@ -1,13 +1,78 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
 
-import './App.css'
+// Import Pages & Layouts (Adjust paths based on your folder structure)
 
-function App() {
+import AppLayout from './layouts/AppLayout';
+import HomePage from './pages/HomePage';
+import AuthPage from './pages/AuthPage';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import ChatInterface from './pages/ChatInterface';
+import QuizCard from './pages/QuizCard';
 
+
+import { useAuth } from './hooks/useAuth';
+
+// A simple wrapper component to apply the layout to dashboard routes
+const DashboardRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400 font-sans">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-zinc-800 border-t-zinc-100 rounded-full animate-spin"></div>
+          <span className="text-sm">Loading session...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <AppLayout>{children}</AppLayout>;
+};
+
+export default function App() {
   return (
-    <>
-      <div className='bg-amber-200 h-100 w-100'></div>
-    </>
-  )
-}
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<AuthPage mode="login" />} />
+      <Route path="/signup" element={<AuthPage mode="signup" />} />
+      <Route path="/auth" element={<Navigate to="/login" replace />} />
 
-export default App
+      {/* Dashboard Routes (Wrapped in AppLayout) */}
+      <Route
+        path="/dashboard"
+        element={
+          <DashboardRoute>
+            <AnalyticsDashboard />
+          </DashboardRoute>
+        }
+      />
+
+      <Route
+        path="/chat"
+        element={
+          <DashboardRoute>
+            <ChatInterface />
+          </DashboardRoute>
+        }
+      />
+
+      <Route
+        path="/quiz"
+        element={
+          <DashboardRoute>
+            <QuizCard />
+          </DashboardRoute>
+        }
+      />
+
+      {/* Fallback Route for 404s */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
