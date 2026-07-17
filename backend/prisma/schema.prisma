@@ -61,6 +61,7 @@ model User {
   // Relations
   tokens          VerificationToken[]
   papers          Paper[]
+  conversations   Conversation[]
 }
 
 model VerificationToken {
@@ -112,4 +113,34 @@ model Question {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// ------------------------------------------------------
+// CHAT & CONVERSATION MODELS
+// ------------------------------------------------------
+
+model Conversation {
+  id        String    @id @default(uuid())
+  title     String    @default("New Chat")
+  
+  // Relation to User
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  messages  Message[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  role           String       // "user" or "assistant"
+  content        String       @db.Text
+  
+  // Relation to Conversation
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime     @default(now())
 }

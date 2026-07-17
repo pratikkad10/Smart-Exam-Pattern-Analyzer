@@ -46,7 +46,7 @@ export const searchContext = async (query, userId, paperId = null) => {
  * @param {string} [paperId] - Optional specific paper to chat with.
  * @returns {Promise<string>} The AI's response.
  */
-export const generateRagAnswer = async (query, userId, paperId = null) => {
+export const generateRagAnswer = async (query, userId, paperId = null, history = []) => {
     // 1. Retrieve relevant context from Qdrant
     const relevantDocs = await searchContext(query, userId, paperId);
 
@@ -110,8 +110,8 @@ CONTEXT
 ${formattedContext}
 `;
 
-    // 4. Query the LLM
-    const rawAnswer = await chatCompletion(systemPrompt, query);
+    // 4. Query the LLM with chat history
+    const rawAnswer = await chatCompletion(systemPrompt, query, history);
     
     // 5. Parse the JSON safely
     try {
