@@ -16,7 +16,7 @@
 * **Frontend:** React.js, Tailwind CSS (for styling), Vite, React Router.
 * **Backend:** Node.js, Express.js (for APIs).
 * **Database:** PostgreSQL (to store users and paper info) with Prisma ORM.
-* **AI / Vector Database:** Qdrant (to store AI embeddings) and LangChain (to connect our app to OpenAI/Gemini).
+* **AI / Vector Database:** Qdrant (to store AI embeddings) and LangChain with Hugging Face Inference API (for embeddings and LLM-based extraction).
 
 ## 4. User Roles (Who will use this?)
 1.  **Student (Main User):** Can upload papers, chat with the AI, generate quizzes, and view study plans.

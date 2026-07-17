@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -61,6 +60,7 @@ model User {
 
   // Relations
   tokens          VerificationToken[]
+  papers          Paper[]
 }
 
 model VerificationToken {
@@ -76,4 +76,40 @@ model VerificationToken {
   createdAt DateTime  @default(now())
 
   @@index([token, type])
+}
+
+model Paper {
+  id          String     @id @default(uuid())
+  title       String
+  subject     String?    // e.g., "Database Management"
+  year        Int?       // e.g., 2019
+  fileUrl     String     // Path or URL to the uploaded PDF
+  rawText     String     // The raw extracted OCR text (can be long)
+  
+  // Relation to User
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Relation to Questions
+  questions   Question[]
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Question {
+  id          String   @id @default(uuid())
+  text        String   // The actual extracted question
+  marks       Int?     // Extracted marks (e.g., 8)
+  unit        String?  // Extracted unit or topic (e.g., "Unit 2")
+  
+  // This is where Qdrant comes in. We don't store the vector array here, 
+  // but Qdrant will use this ID so we can look it up later.
+
+  // Relation to Paper
+  paperId     String
+  paper       Paper    @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

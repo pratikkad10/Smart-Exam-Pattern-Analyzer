@@ -13,12 +13,16 @@ services:
     # This is required so you can access the API from your browser at localhost:5000
     ports:
       - "5000:5000"
+    # Pass the local .env file into the container for secrets like JWT and HuggingFace API keys
+    env_file:
+      - .env
     # Pass environment variables to the backend container
-    # DATABASE_URL uses 'postgres' as the hostname because inside Docker,
+    # We override DATABASE_URL and QDRANT_URL because inside Docker,
     # containers talk to each other by their service name, NOT 'localhost'.
     environment:
       - PORT=5000
       - DATABASE_URL=postgresql://user:password@postgres:5432/sepa_db?schema=public
+      - QDRANT_URL=http://qdrant:6333
     # Tell Docker to start 'postgres' and 'qdrant' before starting the backend
     depends_on:
       - postgres
@@ -51,6 +55,9 @@ services:
     # Download the latest official Qdrant image
     image: qdrant/qdrant:latest
     container_name: qdrant
+    # Expose Qdrant's API port to the host machine
+    ports:
+      - "6333:6333"
     # Mount a volume to save your AI vector data permanently
     volumes:
       - qdrant_data:/qdrant/storage
