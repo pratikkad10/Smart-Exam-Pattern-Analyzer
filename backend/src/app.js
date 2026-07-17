@@ -50,7 +50,10 @@ app.get('/health', (req, res) => {
 
 // --- API Routes ---
 import authRoutes from './routes/auth.routes.js';
+import paperRoutes from './routes/paper.routes.js';
+
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/papers', paperRoutes);
 
 // --- 404 Route Handler ---
 app.use((req, res, next) => {

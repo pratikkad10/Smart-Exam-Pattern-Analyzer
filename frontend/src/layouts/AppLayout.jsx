@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, FileText, CheckCircle2, Menu, X, Settings, LogOut, Share, Download } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, Menu, X, Settings, LogOut, Share, Download, Plus, MessageSquare } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useDocuments } from '../hooks/useDocuments';
@@ -22,7 +22,7 @@ export default function AppLayout({ children }) {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-50 flex font-sans selection:bg-zinc-800">
+        <div className="min-h-screen bg-zinc-900 text-zinc-50 flex font-sans selection:bg-zinc-800">
 
             {/* Mobile Menu Toggle */}
             <button
@@ -41,71 +41,44 @@ export default function AppLayout({ children }) {
       `}>
 
                 {/* App Logo */}
-                <div className="flex items-center gap-2 mb-8 px-2 mt-2 md:mt-0">
+                <div className="flex items-center gap-2 mb-6 px-2 mt-2 md:mt-0">
                     <div className="w-8 h-8 rounded bg-zinc-50 text-zinc-950 flex items-center justify-center font-bold">AI</div>
                     <h1 className="text-lg font-semibold tracking-tight text-zinc-100">StudyAssistant</h1>
                 </div>
 
-                {/* Upload Dropzone */}
-                <div 
-                    onClick={() => !docsLoading && fileInputRef.current?.click()}
-                    className={`border border-dashed border-zinc-700 rounded-lg p-5 mb-6 text-center hover:bg-zinc-900/80 transition-colors cursor-pointer group bg-zinc-900/30 ${
-                        docsLoading ? 'opacity-60 cursor-not-allowed' : ''
-                    }`}
-                >
-                    <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        onChange={handleFileChange} 
-                        accept=".pdf" 
-                        className="hidden" 
-                    />
-                    <div className="text-zinc-500 mb-2 group-hover:text-zinc-300 flex justify-center transition-colors">
-                        {docsLoading ? (
-                            <div className="w-5 h-5 border-2 border-zinc-700 border-t-zinc-300 rounded-full animate-spin"></div>
-                        ) : (
-                            <Upload className="w-5 h-5" />
-                        )}
-                    </div>
-                    <p className="text-xs font-medium text-zinc-300">
-                        {docsLoading ? "Uploading PDF..." : "Upload PDF Paper"}
-                    </p>
-                    <p className="text-[10px] text-zinc-500 mt-1">Max 10MB</p>
-                </div>
+                {/* New Chat Button */}
+                <button className="w-full flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors mb-6 shadow-sm border border-zinc-700/50">
+                    <Plus className="w-4 h-4" />
+                    New Conversation
+                </button>
 
-                {/* Document List */}
-                <div className="flex-1 overflow-y-auto">
-                    <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 px-2">Library</h3>
-                    <ul className="space-y-1">
-                        {documents.map((doc) => {
-                            const isActive = activeDocument?.id === doc.id;
-                            return (
-                                <li key={doc.id}>
-                                    <button 
-                                        onClick={() => setActiveDocument(doc)}
-                                        className={`w-full text-left px-3 py-2.5 text-sm rounded-md transition-colors flex items-center justify-between group border ${
-                                            isActive 
-                                                ? 'bg-zinc-800/80 border-zinc-700/50 text-zinc-50 shadow-sm' 
-                                                : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200 border-transparent'
-                                        }`}
-                                    >
-                                        <div className="flex items-center gap-2 truncate">
-                                            <FileText className={`w-4 h-4 shrink-0 ${isActive ? 'text-zinc-300' : 'text-zinc-500 group-hover:text-zinc-400'}`} />
-                                            <span className="truncate font-medium">{doc.filename}</span>
-                                        </div>
-                                        {isActive ? (
-                                            <CheckCircle2 className="w-4 h-4 text-green-500/80 shrink-0" />
-                                        ) : (
-                                            <div className="w-2 h-2 rounded-full bg-zinc-700 shrink-0 mr-1 group-hover:bg-zinc-600 transition-colors"></div>
-                                        )}
-                                    </button>
-                                </li>
-                            );
-                        })}
-                        {documents.length === 0 && (
-                            <p className="text-xs text-zinc-600 px-2 italic mt-4">No documents uploaded yet.</p>
-                        )}
-                    </ul>
+                {/* Scrollable Middle Section */}
+                <div className="flex-1 overflow-y-auto space-y-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-800 hover:[&::-webkit-scrollbar-thumb]:bg-zinc-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-2">
+                    
+                    {/* Conversations List (Static) */}
+                    <div>
+                        <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 px-2">Recent Chats</h3>
+                        <ul className="space-y-1">
+                            <li>
+                                <button className="w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center gap-2 text-zinc-300 bg-zinc-800/50 border border-zinc-700/50">
+                                    <MessageSquare className="w-4 h-4 shrink-0 text-zinc-400" />
+                                    <span className="truncate">Operating Systems '24</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button className="w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center gap-2 text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200">
+                                    <MessageSquare className="w-4 h-4 shrink-0 text-zinc-500" />
+                                    <span className="truncate">Banker's Algorithm Help</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button className="w-full text-left px-3 py-2 text-sm rounded-md transition-colors flex items-center gap-2 text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200">
+                                    <MessageSquare className="w-4 h-4 shrink-0 text-zinc-500" />
+                                    <span className="truncate">Database Normalization</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 {/* User Settings */}

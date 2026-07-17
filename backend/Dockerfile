@@ -1,4 +1,7 @@
-FROM node:22-alpine
+FROM node:24-alpine
+
+# Install openssl for Prisma query engine support on Alpine Linux
+RUN apk add --no-cache openssl
 
 # Set environment to production for performance optimizations
 ENV NODE_ENV=production
@@ -16,10 +19,13 @@ USER node
 COPY --chown=node:node package*.json ./
 
 # Install only production dependencies for a smaller, cleaner image
-RUN npm ci --only=production
+RUN npm ci --omit=dev --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY --chown=node:node . .
+
+# Generate Prisma Client (must run after source code is copied)
+RUN npx prisma generate
 
 EXPOSE 5000
 
