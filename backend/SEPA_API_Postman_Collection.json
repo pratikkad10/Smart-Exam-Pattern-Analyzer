@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Smart Exam Pattern Analyzer - API",
-    "description": "Production level Postman collection for testing the complete API (Auth + Papers) of the Smart Exam Pattern Analyzer.",
+    "description": "Production level Postman collection for testing the complete API (Auth + Papers + Chat) of the Smart Exam Pattern Analyzer.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -320,6 +320,53 @@
               "raw": "{{baseUrl}}/api/v1/papers/PASTE_PAPER_ID_HERE",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "papers", "PASTE_PAPER_ID_HERE"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Chat & RAG",
+      "item": [
+        {
+          "name": "Ask Question (Global)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"List all 8-mark questions from the database management paper.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "chat"]
+            }
+          }
+        },
+        {
+          "name": "Ask Question (Specific Paper)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"What topics were covered in unit 2?\",\n    \"paperId\": \"PASTE_PAPER_ID_HERE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "chat"]
             }
           }
         }

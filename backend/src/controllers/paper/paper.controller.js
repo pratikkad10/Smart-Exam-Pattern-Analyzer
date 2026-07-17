@@ -64,7 +64,7 @@ export const uploadPaperController = async (req, res) => {
         // 6. Vectorize questions and store in Qdrant (async, non-blocking)
         //    We don't await this — the user gets their response immediately
         //    while vectorization happens in the background
-        vectorizeAndStoreQuestions(paper.questions, paper.id)
+        vectorizeAndStoreQuestions(paper.questions, paper.id, userId)
             .then(() => console.log(`Vectorization complete for paper: ${paper.id}`))
             .catch((err) => console.error(`Vectorization failed for paper ${paper.id}:`, err));
 
