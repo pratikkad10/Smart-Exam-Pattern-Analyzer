@@ -26,20 +26,23 @@ export const processChatQuery = async (userId, query, paperId, conversationId) =
         }
     }
 
-    // 2. Save the user's message to the DB
+    // 2. Fetch past messages for this conversation to give the LLM memory (context)
+    const historyDesc = await prisma.message.findMany({
+        where: { conversationId: convoId },
+        orderBy: { createdAt: 'desc' },
+        take: 10 // Get the 10 most recent messages
+    });
+    
+    // Reverse to chronological order for the LLM
+    const history = historyDesc.reverse();
+
+    // 3. Save the user's message to the DB
     await prisma.message.create({
         data: {
             conversationId: convoId,
             role: "user",
             content: query
         }
-    });
-
-    // 3. Fetch past messages for this conversation to give the LLM memory (context)
-    const history = await prisma.message.findMany({
-        where: { conversationId: convoId },
-        orderBy: { createdAt: 'asc' },
-        take: 10 // Get last 10 messages to avoid token bloat
     });
 
     // 4. Get answer from RAG pipeline
