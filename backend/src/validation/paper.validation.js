@@ -15,4 +15,5 @@ export const paperUploadSchema = z.object({
             const parsed = parseInt(val, 10);
             return isNaN(parsed) ? null : parsed;
         }),
+    conversationId: z.string().uuid("Invalid conversation ID").optional(),
 });

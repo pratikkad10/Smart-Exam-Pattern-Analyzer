@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Smart Exam Pattern Analyzer - API",
-    "description": "Production level Postman collection for testing the complete API (Auth + Papers) of the Smart Exam Pattern Analyzer.",
+    "description": "Production level Postman collection for testing the complete API (Auth + Papers + Chat) of the Smart Exam Pattern Analyzer.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -320,6 +320,112 @@
               "raw": "{{baseUrl}}/api/v1/papers/PASTE_PAPER_ID_HERE",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "papers", "PASTE_PAPER_ID_HERE"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Chat & RAG",
+      "item": [
+        {
+          "name": "Get All Conversations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/chat/conversations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "chat", "conversations"]
+            }
+          }
+        },
+        {
+          "name": "Get Conversation History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/chat/conversations/PASTE_CONVERSATION_ID_HERE",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "chat", "conversations", "PASTE_CONVERSATION_ID_HERE"]
+            }
+          }
+        },
+        {
+          "name": "Ask Question (New Chat)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"List all 8-mark questions from the database management paper.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "chat"]
+            }
+          }
+        },
+        {
+          "name": "Ask Question (Continue Chat)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"Which of those are from unit 2?\",\n    \"conversationId\": \"PASTE_CONVERSATION_ID_HERE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "chat"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Analytics & Question Bank",
+      "item": [
+        {
+          "name": "Get Question Bank",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/question-bank",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "analytics", "question-bank"]
+            }
+          }
+        },
+        {
+          "name": "Get Question Bank (Specific Papers)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/question-bank?paperIds=uuid1,uuid2",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "analytics", "question-bank"],
+              "query": [
+                {
+                  "key": "paperIds",
+                  "value": "uuid1,uuid2"
+                }
+              ]
             }
           }
         }

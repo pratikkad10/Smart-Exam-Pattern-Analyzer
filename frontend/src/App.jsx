@@ -7,7 +7,6 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import ChatInterface from './pages/ChatInterface';
-import QuizCard from './pages/QuizCard';
 
 
 import { useAuth } from './hooks/useAuth';
@@ -72,15 +71,6 @@ export default function App() {
       <Route path="/reset-password" element={<GuestRoute><ResetPasswordPage /></GuestRoute>} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />
 
-      {/* Dashboard Routes (Wrapped in AppLayout) */}
-      <Route
-        path="/dashboard"
-        element={
-          <DashboardRoute>
-            <AnalyticsDashboard />
-          </DashboardRoute>
-        }
-      />
       <Route
         path="/chat"
         element={
@@ -90,12 +80,24 @@ export default function App() {
         }
       />
       <Route
-        path="/quiz"
+        path="/chat/:conversationId"
         element={
           <DashboardRoute>
-            <QuizCard />
+            <ChatInterface />
           </DashboardRoute>
         }
+      />
+      <Route
+        path="/chat/:conversationId/questions"
+        element={
+          <DashboardRoute>
+            <AnalyticsDashboard />
+          </DashboardRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={<Navigate to="/chat" replace />}
       />
       <Route
         path="/settings"

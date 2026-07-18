@@ -51,9 +51,13 @@ app.get('/health', (req, res) => {
 // --- API Routes ---
 import authRoutes from './routes/auth.routes.js';
 import paperRoutes from './routes/paper.routes.js';
+import chatRoutes from './routes/chat.routes.js';
+import analyticsRoutes from './routes/analytics.routes.js';
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/papers', paperRoutes);
+app.use('/api/v1/chat', chatRoutes);
+app.use('/api/v1/analytics', analyticsRoutes);
 
 // --- 404 Route Handler ---
 app.use((req, res, next) => {

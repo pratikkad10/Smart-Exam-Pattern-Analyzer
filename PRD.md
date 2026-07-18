@@ -10,7 +10,7 @@
 ## 2. Problem & Solution
 **The Problem:** Students waste hours downloading and reading old university exam PDFs to figure out which topics carry the most marks or get repeated often. 
 
-**The Solution:** An automated system where users upload PDFs. The AI extracts and organizes the questions into a database. Students can then view analytics (like frequently asked questions), generate practice quizzes, and use an AI chatbot to ask things like, *"What are the most asked questions in Unit 2?"*
+**The Solution:** An automated system where users upload PDFs. The AI extracts and organizes the questions into a database. Students can then view analytics (like frequently asked questions) and use an AI chatbot to ask things like, *"What are the most asked questions in Unit 2?"*
 
 ## 3. Technology Stack (What we are using)
 * **Frontend:** React.js, Tailwind CSS (for styling), Vite, React Router.
@@ -19,7 +19,7 @@
 * **AI / Vector Database:** Qdrant (to store AI embeddings) and LangChain with Hugging Face Inference API (for embeddings and LLM-based extraction).
 
 ## 4. User Roles (Who will use this?)
-1.  **Student (Main User):** Can upload papers, chat with the AI, generate quizzes, and view study plans.
+1.  **Student (Main User):** Can upload papers, chat with the AI, and view study plans.
 2.  **Admin:** Can manage users, delete bad uploads, and monitor system health.
 
 ---
@@ -37,16 +37,14 @@ These are the features we MUST build for the first working version of the app.
 * Extracted data is saved into the PostgreSQL database.
 
 ### Feature 3: AI Chatbot (RAG System)
-* A chat interface where students can talk to the uploaded exam papers.
-* **Example prompt:** *"List all 8-mark questions from the 2019 database management paper."*
-* The system searches the Vector Database (Qdrant) to find the right context and generates an answer.
+* A ChatGPT-style chat interface where students can talk to the uploaded exam papers.
+* **Conversational Memory:** The system maintains independent chat sessions (Conversations and Messages), allowing follow-up questions and maintaining context just like ChatGPT.
+* **Example prompt:** *"List all 8-mark questions from the 2019 database management paper."* followed by *"Which of those are from Unit 2?"*
+* The system searches the Vector Database (Qdrant) to find the right context and generates an answer in structured JSON.
 
-### Feature 4: Analytics & Study Planner
-* A dashboard showing graphs of which topics/units are asked most frequently.
-* A button to "Generate Study Plan" that creates a customized schedule based on important topics.
-
-### Feature 5: AI Quiz Generator
-* A feature that automatically creates a short multiple-choice quiz based on the extracted exam questions so students can test themselves.
+### Feature 4: Analytics & Question Bank
+* A system that automatically scans all uploaded past papers to find the **most repeated questions**.
+* Groups similar questions together, counts their frequencies, and generates a structured Question Bank to highlight the most important topics to study.
 
 ---
 
@@ -56,9 +54,8 @@ These are the features we MUST build for the first working version of the app.
 * **Auth:** As a student, I want to log in securely so that my uploaded papers and chats are private.
 * **Upload:** As a student, I want to drag and drop a PDF paper so that the system can process it.
 * **Extraction:** As a developer, I want the backend to parse the PDF text and format it into a structured JSON object so it can be saved in Postgres.
-* **Chat:** As a student, I want a chat window where I can ask questions about the syllabus and get instant answers based on past papers.
-* **Quiz:** As a student, I want to click "Generate Quiz" so I can practice what I just learned.
-
+* **Chat:** As a student, I want to create multiple independent chat sessions where I can ask follow-up questions about my syllabus and get instant answers based on past papers.
+* **Analytics:** As a student, I want to see a Question Bank of the most frequently asked questions across 5 years of past papers so I know what to study first.
 ---
 
 ## 7. Success Criteria (How do we know we are done?)

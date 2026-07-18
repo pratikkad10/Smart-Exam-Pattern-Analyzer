@@ -19,14 +19,23 @@ const MODEL = "Qwen/Qwen2.5-7B-Instruct";
  * @param {string} userMessage - The user message (e.g., the exam paper text)
  * @returns {Promise<string>} The model's response text
  */
-export const chatCompletion = async (systemPrompt, userMessage) => {
+export const chatCompletion = async (systemPrompt, userMessage, history = []) => {
     try {
+        // Map DB message roles to HF API roles
+        const previousMessages = history.map(msg => ({
+            role: msg.role === "user" ? "user" : "assistant",
+            content: msg.role === "assistant" ? (msg.content.includes('"summary"') ? JSON.parse(msg.content).summary : msg.content) : msg.content
+        }));
+
+        const messages = [
+            { role: "system", content: systemPrompt },
+            ...previousMessages,
+            { role: "user", content: userMessage },
+        ];
+
         const response = await hfClient.chatCompletion({
             model: MODEL,
-            messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userMessage },
-            ],
+            messages: messages,
             temperature: 0.1,
             max_tokens: 4096,
         });

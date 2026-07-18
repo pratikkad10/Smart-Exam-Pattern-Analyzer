@@ -52,10 +52,10 @@ export function DocumentProvider({ children }) {
         }
     }, [activeDocument]);
 
-    const uploadDocument = async (file) => {
+    const uploadDocument = async (file, conversationId = null) => {
         setLoading(true);
         try {
-            await documentService.uploadPDF(file);
+            await documentService.uploadPDF(file, conversationId);
             await fetchDocuments();
         } catch (error) {
             console.error("Failed to upload document:", error);

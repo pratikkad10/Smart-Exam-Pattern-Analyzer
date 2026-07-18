@@ -31,7 +31,7 @@ export const uploadPaperController = async (req, res) => {
             return res.status(400).json({ errors: validation.error.issues });
         }
 
-        const { title, subject, year } = validation.data;
+        const { title, subject, year, conversationId } = validation.data;
         const userId = req.user?.id;
 
         if (!userId) {
@@ -53,10 +53,11 @@ export const uploadPaperController = async (req, res) => {
             {
                 title,
                 subject,
-                year,
+                year: year ? parseInt(year, 10) : undefined,
                 fileUrl: req.file.path,
                 rawText,
                 userId,
+                conversationId: conversationId || undefined
             },
             extractedQuestions
         );
@@ -64,7 +65,7 @@ export const uploadPaperController = async (req, res) => {
         // 6. Vectorize questions and store in Qdrant (async, non-blocking)
         //    We don't await this — the user gets their response immediately
         //    while vectorization happens in the background
-        vectorizeAndStoreQuestions(paper.questions, paper.id)
+        vectorizeAndStoreQuestions(paper.questions, paper.id, userId, conversationId)
             .then(() => console.log(`Vectorization complete for paper: ${paper.id}`))
             .catch((err) => console.error(`Vectorization failed for paper ${paper.id}:`, err));
 
