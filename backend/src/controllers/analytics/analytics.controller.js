@@ -11,11 +11,12 @@ export const getQuestionBankController = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        // Extract optional paperIds from the query string (e.g., ?paperIds=id1,id2,id3)
-        const { paperIds } = req.query;
+        const { paperIds, conversationId } = req.query;
         let paperFilter = { userId: userId };
 
-        if (paperIds) {
+        if (conversationId) {
+            paperFilter.conversationId = conversationId;
+        } else if (paperIds) {
             const idsArray = paperIds.split(",").map(id => id.trim());
             if (idsArray.length > 0) {
                 paperFilter.id = { in: idsArray };

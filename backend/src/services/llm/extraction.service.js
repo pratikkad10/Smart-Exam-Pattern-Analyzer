@@ -27,6 +27,7 @@ Your task is to extract EVERY question from the provided exam paper and return O
    - Maximum Marks
    - Instructions like "Attempt Any Three"
    - Decorative separators
+   - Standalone structural choice words like "OR", "AND", or "EITHER" that appear between questions.
 
 ## For each question extract:
 
@@ -90,10 +91,15 @@ export const extractQuestionsFromText = async (rawText) => {
         throw new Error("AI returned an empty or invalid question list.");
     }
 
-    // Sanitize each question object
-    return questions.map((q) => ({
-        text: typeof q.text === "string" ? q.text.trim() : String(q.text),
-        marks: typeof q.marks === "number" ? q.marks : null,
-        unit: typeof q.unit === "string" ? q.unit.trim() : null,
-    }));
+    // Sanitize each question object and filter out hallucinated structural words
+    return questions
+        .map((q) => ({
+            text: typeof q.text === "string" ? q.text.trim() : String(q.text),
+            marks: typeof q.marks === "number" ? q.marks : null,
+            unit: typeof q.unit === "string" ? q.unit.trim() : null,
+        }))
+        .filter(q => {
+            const lowerText = q.text.toLowerCase();
+            return lowerText !== "or" && lowerText !== "and" && lowerText !== "either" && lowerText.length > 3;
+        });
 };

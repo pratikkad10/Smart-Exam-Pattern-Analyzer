@@ -12,9 +12,10 @@ import { chatCompletion } from "../../config/llm.js";
  * @param {string} query - The user's chat query.
  * @param {string} userId - The ID of the user (to filter only their papers).
  * @param {string} [paperId] - Optional. If provided, filters to only this paper.
+ * @param {string} [conversationId] - Optional. If provided, filters to only papers in this conversation.
  * @returns {Promise<Array>} List of relevant LangChain Document objects.
  */
-export const searchContext = async (query, userId, paperId = null) => {
+export const searchContext = async (query, userId, paperId = null, conversationId = null) => {
     // We use Qdrant's payload filtering to ensure users only search their own data
     // Note: LangChain JS stores metadata fields under the "metadata." prefix in Qdrant payloads
     const filter = {
@@ -34,6 +35,14 @@ export const searchContext = async (query, userId, paperId = null) => {
         });
     }
 
+    // If a conversationId is provided, restrict context to papers uploaded in this conversation
+    if (conversationId) {
+        filter.must.push({
+            key: "metadata.conversationId",
+            match: { value: conversationId }
+        });
+    }
+
     // Retrieve the top 10 most relevant questions based on semantic similarity
     const results = await vectorStore.similaritySearch(query, 10, filter);
     return results;
@@ -44,11 +53,13 @@ export const searchContext = async (query, userId, paperId = null) => {
  * @param {string} query - The user's chat query.
  * @param {string} userId - The user's ID.
  * @param {string} [paperId] - Optional specific paper to chat with.
+ * @param {Array} history - Chat history
+ * @param {string} [conversationId] - Optional conversation id
  * @returns {Promise<string>} The AI's response.
  */
-export const generateRagAnswer = async (query, userId, paperId = null, history = []) => {
+export const generateRagAnswer = async (query, userId, paperId = null, history = [], conversationId = null) => {
     // 1. Retrieve relevant context from Qdrant
-    const relevantDocs = await searchContext(query, userId, paperId);
+    const relevantDocs = await searchContext(query, userId, paperId, conversationId);
 
     if (!relevantDocs || relevantDocs.length === 0) {
         return {
@@ -119,9 +130,9 @@ ${formattedContext}
         const cleanAnswer = rawAnswer.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
         return JSON.parse(cleanAnswer);
     } catch (error) {
-        console.error("Failed to parse RAG JSON answer:", rawAnswer);
+        console.error("Failed to parse RAG JSON answer. Falling back to raw text:", rawAnswer);
         return {
-            summary: "I found some information, but there was an error formatting the response.",
+            summary: rawAnswer || "I couldn't process this request properly.",
             results: [],
             raw: rawAnswer
         };

@@ -43,7 +43,7 @@ export const processChatQuery = async (userId, query, paperId, conversationId) =
     });
 
     // 4. Get answer from RAG pipeline
-    const answerData = await generateRagAnswer(query, userId, paperId, history);
+    const answerData = await generateRagAnswer(query, userId, paperId, history, convoId);
 
     // 5. Save the AI's response to the DB
     await prisma.message.create({
@@ -58,6 +58,15 @@ export const processChatQuery = async (userId, query, paperId, conversationId) =
         conversationId: convoId,
         ...answerData
     };
+};
+
+export const createConversation = async (userId, title = "New Chat") => {
+    return prisma.conversation.create({
+        data: {
+            userId,
+            title
+        }
+    });
 };
 
 export const getUserConversations = async (userId) => {
@@ -88,4 +97,19 @@ export const getConversationHistory = async (userId, conversationId) => {
     }
 
     return convo;
+};
+
+export const deleteConversation = async (userId, conversationId) => {
+    // Verify ownership before deleting
+    const convo = await prisma.conversation.findUnique({
+        where: { id: conversationId }
+    });
+
+    if (!convo || convo.userId !== userId) {
+        throw new Error("Conversation not found or unauthorized");
+    }
+
+    return prisma.conversation.delete({
+        where: { id: conversationId }
+    });
 };

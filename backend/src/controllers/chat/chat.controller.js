@@ -4,7 +4,7 @@
  * Exposes the RAG Chatbot endpoint.
  */
 import { chatSchema } from "../../validation/chat.validation.js";
-import { processChatQuery, getUserConversations, getConversationHistory } from "../../services/llm/chat.service.js";
+import { processChatQuery, getUserConversations, getConversationHistory, createConversation } from "../../services/llm/chat.service.js";
 
 /**
  * POST /api/v1/chat
@@ -36,6 +36,21 @@ export const askQuestionController = async (req, res) => {
 };
 
 /**
+ * POST /api/v1/chat/conversations
+ * Create a new conversation explicitly.
+ */
+export const createConversationController = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        const conversation = await createConversation(userId, "New Chat");
+        res.status(201).json({ conversation });
+    } catch (error) {
+        console.error("Error creating conversation:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+/**
  * GET /api/v1/chat/conversations
  * Get all conversations for the user.
  */
@@ -60,6 +75,26 @@ export const getConversationHistoryController = async (req, res) => {
         const conversation = await getConversationHistory(userId, conversationId);
         res.status(200).json({ conversation });
     } catch (error) {
+        res.status(403).json({ message: "Unauthorized or not found" });
+    }
+};
+
+/**
+ * DELETE /api/v1/chat/conversations/:id
+ * Delete a specific conversation.
+ */
+export const deleteConversationController = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        const conversationId = req.params.id;
+        
+        // deleteConversation is imported from chat.service.js
+        const { deleteConversation } = await import("../../services/llm/chat.service.js");
+        await deleteConversation(userId, conversationId);
+        
+        res.status(200).json({ message: "Conversation deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting conversation:", error);
         res.status(403).json({ message: "Unauthorized or not found" });
     }
 };

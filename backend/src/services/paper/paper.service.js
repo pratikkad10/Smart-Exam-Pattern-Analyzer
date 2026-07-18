@@ -29,6 +29,7 @@ export const createPaperWithQuestions = async (paperData, questions) => {
             fileUrl: paperData.fileUrl,
             rawText: paperData.rawText,
             userId: paperData.userId,
+            conversationId: paperData.conversationId,
             // Nested create: insert all questions in one go
             questions: {
                 create: questions.map((q) => ({

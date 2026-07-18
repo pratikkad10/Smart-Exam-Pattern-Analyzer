@@ -91,6 +91,10 @@ model Paper {
   userId      String
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   
+  // Relation to Conversation (Optional, if paper is uploaded inside a chat)
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
   // Relation to Questions
   questions   Question[]
 
@@ -128,6 +132,7 @@ model Conversation {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   messages  Message[]
+  papers    Paper[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

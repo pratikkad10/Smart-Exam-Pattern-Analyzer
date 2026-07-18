@@ -3,11 +3,16 @@ import api from './api';
 
 export const documentService = {
     // Upload a PDF for processing
-    uploadPDF: async (file) => {
+    uploadPDF: async (file, conversationId = null) => {
         const formData = new FormData();
-        formData.append('document', file); // 'document' must match your multer field name in Node.js
+        formData.append('paper', file); 
+        formData.append('title', file.name); // Send basic required metadata
+        
+        if (conversationId) {
+            formData.append('conversationId', conversationId);
+        }
 
-        const response = await api.post('/documents/upload', formData, {
+        const response = await api.post('/papers/upload', formData, {
             headers: {
                 // Override default JSON content type for file uploads
                 'Content-Type': 'multipart/form-data',
@@ -18,8 +23,9 @@ export const documentService = {
 
     // Fetch all documents for the sidebar
     getDocuments: async () => {
-        const response = await api.get('/documents');
-        return response.data;
+        const response = await api.get('/papers');
+        // map backend 'papers' to frontend expectations if necessary
+        return response.data.papers || response.data;
     },
 
     // Get analytics (Predicted topics, stats)

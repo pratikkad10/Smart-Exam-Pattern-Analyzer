@@ -13,7 +13,7 @@ import vectorStore from "../../config/qdrant.js";
  * @param {string} paperId - The Paper ID these questions belong to
  * @returns {Promise<void>}
  */
-export const vectorizeAndStoreQuestions = async (questions, paperId, userId) => {
+export const vectorizeAndStoreQuestions = async (questions, paperId, userId, conversationId = null) => {
     if (!questions || questions.length === 0) {
         console.warn("No questions to vectorize.");
         return;
@@ -27,6 +27,7 @@ export const vectorizeAndStoreQuestions = async (questions, paperId, userId) => 
             questionId: question.id,
             paperId: paperId,
             userId: userId,
+            conversationId: conversationId || undefined,
             marks: question.marks,
             unit: question.unit,
         },
